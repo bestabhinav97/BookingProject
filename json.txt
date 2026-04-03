@@ -1,0 +1,6 @@
+{
+    "fromDate": "2026-06-15",
+    "toDate": "2026-06-20",
+    "noOfBedsRequired": 2
+}
+
