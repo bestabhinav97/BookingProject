@@ -7,4 +7,6 @@ bookingRouter.use(authMiddleWear.checkLogin);
 
 bookingRouter.post("/initiate", bookingController.initiateBooking);
 
+
+
 module.exports = bookingRouter;

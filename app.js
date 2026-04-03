@@ -4,12 +4,19 @@ const db = require("./db/db");
 const helmet = require("helmet");
 const errorHandler = require("./middlewear/errorHandler");
 const cookie = require("cookie-parser");
+const bookingController = require("./controller/bookingController");
 
 const authRouter = require("./routes/authRoute");
 const roomRouter = require("./routes/roomRoute");
 const bookingRouter = require("./routes/bookingsRoute");
 
 const app = express();
+
+app.post(
+  "/webhook",
+  express.raw({ type: "application/json" }),
+  bookingController.handleWebHook,
+);
 
 //MIDDLEWEAR
 app.use(express.json());

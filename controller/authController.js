@@ -1,6 +1,7 @@
 const validator = require("validator");
 const userModel = require("../model/user");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 module.exports.signUp = async (req, res, next) => {
   console.log("HELLO SIGN UP");
@@ -41,8 +42,6 @@ module.exports.signUp = async (req, res, next) => {
   }
 };
 
-const loginKey = "LOGINKEY";
-
 module.exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -64,7 +63,7 @@ module.exports.login = async (req, res, next) => {
         .json({ success: false, message: "INVALID EMAIL OR PASSWORD" });
     } else {
       // 1. Sign the token
-      const token = jwt.sign(result, loginKey, {
+      const token = jwt.sign(result, process.env.JWT_SECRET, {
         expiresIn: "1h",
       });
 

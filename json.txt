@@ -4,3 +4,19 @@
     "noOfBedsRequired": 2
 }
 
+{
+    "email": "bestabhinav97@gmail.com"
+    "password": "abhi12345"
+}
+
+{
+    "roomNumber" : 102,
+    "fromDate": "2026-06-15",
+    "toDate": "2026-06-20",
+}
+
+{
+    "roomNumber" : 102,
+    "fromDate": "2026-06-15",
+    "toDate": "2026-06-20"
+}

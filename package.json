@@ -17,6 +17,7 @@
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "dayjs": "^1.11.20",
+    "dotenv": "^17.4.0",
     "express": "^5.2.1",
     "exrpess": "^0.0.1-security",
     "helmet": "^8.1.0",
