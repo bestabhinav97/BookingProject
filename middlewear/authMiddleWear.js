@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const loginKey = "LOGINKEY";
+require("dotenv").config();
 
 // CHECK FOR LOGIN
 module.exports.checkLogin = (req, res, next) => {
@@ -15,7 +15,7 @@ module.exports.checkLogin = (req, res, next) => {
     }
 
     // 3. Verify the token
-    const verifiedToken = jwt.verify(token, loginKey);
+    const verifiedToken = jwt.verify(token, process.env.JWT_SECRET);
 
     if (verifiedToken) {
       // Optional: Attach user data to the request for use in next routes

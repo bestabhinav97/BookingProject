@@ -5,7 +5,7 @@
 }
 
 {
-    "email": "bestabhinav97@gmail.com"
+    "email": "bestabhinav97@gmail.com",
     "password": "abhi12345"
 }
 
@@ -20,3 +20,14 @@
     "fromDate": "2026-06-15",
     "toDate": "2026-06-20"
 }
+
+
+🧠 Most Common in Real APIs
+If you only remember a few, remember these:
+200 → OK
+201 → Created
+400 → Bad request
+401 → Unauthorized
+403 → Forbidden
+404 → Not found
+500 → Server error

@@ -4,6 +4,7 @@ const dayjs = require("dayjs");
 const helperFunction = require("../utils/helperFunctions");
 const bookingModel = require("../model/bookings");
 const roomModel = require("../model/room");
+const emailHelper = require("../utils/email");
 
 module.exports.initiateBooking = async (req, res, next) => {
   try {
@@ -71,7 +72,7 @@ module.exports.initiateBooking = async (req, res, next) => {
                 name: `ROOM ${roomNumber} RESERVATION`,
                 description: `Booking from ${dbStartDate} to ${dbEndDate}`,
               },
-              unit_amount: totalCost * 100,
+              unit_amount: totalCost * 100, // STRIPE NEEDS PAYMENT IN CENTS
             },
             quantity: 1,
           },
@@ -120,11 +121,18 @@ module.exports.handleWebHook = async (req, res, next) => {
 
     // PULL THE ID FROM THE METADATA
     const bookingId = session.metadata.bookingId;
+    const customerEmail = session.customer_details.email;
 
     if (bookingId) {
       console.log(`✅ BOOKING CONFIRMED FOR ${bookingId}`);
       try {
         await bookingModel.confirmBooking(bookingId);
+
+        await emailHelper.sendEmail({
+          email: customerEmail,
+          subject: "Reservation Confirmed!",
+          message: `Your payment was successful! Your booking ID is ${bookingId}. We look forward to seeing you.`,
+        });
       } catch (dbError) {
         console.log("❌ Database Error:", dbError.message);
         return next(dbError);
@@ -134,4 +142,73 @@ module.exports.handleWebHook = async (req, res, next) => {
 
   // Move this OUTSIDE the if block so Stripe gets a 200 for every event
   res.json({ received: true });
+};
+
+// GET USER BOOKINGS
+
+module.exports.getUserBookings = async (req, res, next) => {
+  try {
+    const user = req.user;
+
+    if (!user.userId) {
+      return res.status(400).json({
+        success: false,
+        message: "INVALID USERID",
+      });
+    }
+
+    const userBookings = await bookingModel.getUserBookings(user.userId);
+    if (userBookings == false) {
+      return res.status(200).json({
+        success: true,
+        message: "NO BOOKINGS FOUND",
+      });
+    } else {
+      return res.status(200).json({
+        success: true,
+        message: "BOOKINGS FOUND",
+        data: userBookings,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+// CANCEL USER BOOKINGS
+
+module.exports.cancelUserBooking = async (req, res, next) => {
+  try {
+    const user = req.user;
+    const bookingId = req.params.bookingId;
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "INVALID USER",
+      });
+    }
+
+    if (!bookingId) {
+      return res.status(400).json({
+        success: false,
+        message: "INVALID OR NO BOOKING ID",
+      });
+    }
+
+    const result = await bookingModel.cancelUserBooking(user.userId, bookingId);
+    if (result == false) {
+      return res
+        .status(200)
+        .json({ success: false, message: "NO BOOKINGS FOUND" });
+    } else {
+      return res
+        .status(200)
+        .json({ success: true, message: "BOOKING CANCELLED SUCCESSFULLY" });
+    }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
 };

@@ -9,9 +9,12 @@ const bookingController = require("./controller/bookingController");
 const authRouter = require("./routes/authRoute");
 const roomRouter = require("./routes/roomRoute");
 const bookingRouter = require("./routes/bookingsRoute");
+const adminRouter = require("./routes/adminRoute");
 
 const app = express();
 
+//Stripe webhooks use HMAC (Hash-based Message Authentication Code) for security.
+// This requires a byte-for-byte match of the payload to verify the signature
 app.post(
   "/webhook",
   express.raw({ type: "application/json" }),
@@ -27,6 +30,7 @@ app.use(cookie());
 app.use("/auth", authRouter);
 app.use("/room", roomRouter);
 app.use("/bookings", bookingRouter);
+app.use("/admin", adminRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello");

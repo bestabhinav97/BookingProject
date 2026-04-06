@@ -10,6 +10,7 @@ module.exports.checkExistingEmail = async (email) => {
     return result;
   } catch (error) {
     console.log(error);
+    throw error;
   }
 };
 

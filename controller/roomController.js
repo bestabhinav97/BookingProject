@@ -12,6 +12,14 @@ module.exports.getAllAvailableRoom = async (req, res, next) => {
     const endDate = dayjs(toDate);
     const today = dayjs().startOf("day"); // Current date at 00:00:00
 
+    //VALIDATE BEDS
+    if (noOfBedsRequired <= 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No of beds should be atleast 1" });
+    }
+
+    //VALIDATE DATE
     const checkDate = helperFunction.checkDates(fromDate, toDate);
 
     if (checkDate.success == false) {
